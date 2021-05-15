@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 
 export const arrayMonths = [{value: '01', label: 'Janeiro'},
 {value: '02', label: 'Fevereiro'},
@@ -45,7 +46,7 @@ export function getModules ( pArray : IIssues[] ){
     
    pArray.map( item => {
        return item.custom_fields.filter(
-            subItem => { 
+            subItem => {  
                 if ((subItem.name === 'Módulo') && (!modules.find( el => el.name === subItem.value))) {
                     modules.push({ name:  subItem.value});
                 }
@@ -62,7 +63,6 @@ export function getTrackers ( pArray : IIssues[] ){
                   { 
                      if (item.tracker && !trakers.find( el => el.name === item.tracker.name)) {
                          trakers.push({ id: item.tracker.id, name:  item.tracker.name});
-                     return trakers;    
                   }
           });
  
@@ -78,7 +78,6 @@ export function getProjects ( pArray : IIssues[] ){
                  {
                     if (!projects.find( el => el.name === item.project.name)) {
                         projects.push({ name:  item.project.name});
-                    return projects;    
                  }
          });
 
