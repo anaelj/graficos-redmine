@@ -43,13 +43,13 @@ export interface IProject {
 export function getModules ( pArray : IIssues[] ){
    const modules : Array<IModule>= [];
     
-   pArray.map( item => 
-        item.custom_fields.filter(
+   pArray.map( item => {
+       return item.custom_fields.filter(
             subItem => { 
                 if ((subItem.name === 'Módulo') && (!modules.find( el => el.name === subItem.value))) {
                     modules.push({ name:  subItem.value});
                 }
-         }));
+         })}); 
 
    return  modules;     
  
@@ -59,9 +59,10 @@ export function getTrackers ( pArray : IIssues[] ){
     trakers.push({ id: 0, name: 'Todos'});
     
     pArray.map( item =>
-                  {
+                  { 
                      if (item.tracker && !trakers.find( el => el.name === item.tracker.name)) {
                          trakers.push({ id: item.tracker.id, name:  item.tracker.name});
+                     return trakers;    
                   }
           });
  
@@ -77,6 +78,7 @@ export function getProjects ( pArray : IIssues[] ){
                  {
                     if (!projects.find( el => el.name === item.project.name)) {
                         projects.push({ name:  item.project.name});
+                    return projects;    
                  }
          });
 

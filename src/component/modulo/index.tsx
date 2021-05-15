@@ -47,7 +47,7 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
 
 //    console.log(issuesLocal);
            
-},[issues, selectedYear, selectedMonth, selectedTracker]); 
+},[issues, selectedYear, selectedMonth, selectedTracker, projeto]); 
     
     return (
    <>
