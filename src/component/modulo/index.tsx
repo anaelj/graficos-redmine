@@ -34,7 +34,7 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
     arrayLocal = [];
     
     modules.map( item => {
-          arrayLocal.push(...[[
+        return  arrayLocal.push(...[[
                 item.name === '' ? 'Sem módulo' : item.name , 
                 issuesLocal.filter(
                     issue => issue.custom_fields.find(

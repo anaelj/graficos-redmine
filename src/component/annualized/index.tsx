@@ -32,7 +32,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
     arrayLocal = [];
     
     arrayMonths.map( item => {
-          arrayLocal.push(...[[
+        return  arrayLocal.push(...[[
                       item.label , 
                       issuesLocal.filter(issue => issue.created_on.includes(selectedYear+'-'+item.value)).length
                     ]])
