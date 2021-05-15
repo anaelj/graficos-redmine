@@ -30,7 +30,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
     arrayLocal = [];
     
     arrayMonths.map( item => {
-          arrayLocal.push(...[[
+         return arrayLocal.push(...[[
                       item.label , 
                       issuesLocal.filter(issue => issue.created_on.includes(selectedYear+'-'+item.value) && issue.custom_fields.find(ctf => ctf.id === 10 && ctf.value === 'Cliente')).length,
                       issuesLocal.filter(issue => issue.created_on.includes(selectedYear+'-'+item.value) && issue.custom_fields.find(ctf => ctf.id === 10 && ctf.value === 'Teste Interno')).length
@@ -43,7 +43,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
  // console.log(getTrackers(issuesLocal));
     
            
-},[issues, selectedYear]); 
+},[issues, selectedYear, modulo]); 
     
     
    return (
