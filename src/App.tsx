@@ -19,7 +19,7 @@ function App() {
   
    async function loadData(skip : number, itens : IIssues[] ): Promise<void> {
      setLoading(true);
-    const response = await api.get(`issues.json?status_id=*&limit=100&offset=${skip}&created_on=%3E%3C2021-01-01|2021-06-01&key=1927788238b0418601fd837aeabcdd9437042b4c`);        
+    const response = await api.get(`issues.json?status_id=*&limit=100&offset=${skip}&created_on=%3E%3C2020-01-01|2021-06-01&key=1927788238b0418601fd837aeabcdd9437042b4c`);        
     const newArray : IIssues[] = response.data.issues;
    
     if (newArray.length === 100){

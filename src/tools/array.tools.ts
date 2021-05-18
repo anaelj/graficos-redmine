@@ -45,7 +45,7 @@ export function getModules ( pArray : IIssues[] ){
    const modules : Array<IModule>= [];
     
    pArray.map( item => {
-       return item.custom_fields.filter(
+    item && item.custom_fields && item.custom_fields.filter(
             subItem => {  
                 if ((subItem.name === 'Módulo') && (!modules.find( el => el.name === subItem.value))) {
                     modules.push({ name:  subItem.value});
