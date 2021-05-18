@@ -22,7 +22,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
     setLoading(true);
     const issuesLocal = issues.filter(
         item => 
-          item.custom_fields.find(itemModulo => itemModulo.value === modulo) 
+          item && item.custom_fields && item.custom_fields.find(itemModulo => itemModulo.value === modulo) 
             && item.created_on.includes(selectedYear) 
             && (item.tracker.id === selectedTracker || selectedTracker === 0)
             //&& selectedTracker > 0 ? item.tracker.id === selectedTracker : item.tracker.id !== selectedTracker 
