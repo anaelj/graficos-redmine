@@ -70,6 +70,31 @@ export function getTrackers ( pArray : IIssues[] ){
     return  trakers;     
 }
 
+export function daysBetween (dateStart : any, dateEnd: any){
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const now = new Date();
+    let dataFinal ;
+    
+    if (dateEnd.getFullYear() === now.getFullYear() ) {
+      if (dateEnd.getMonth() > now.getMonth()) {
+          dataFinal = now;
+      } else {
+        dataFinal = dateEnd;
+      }
+    }  
+    else  {
+        if (dateEnd.getMonth() === 11) {
+            dataFinal = new Date( dateEnd.getFullYear() +1, 0, 1 );
+        } else {
+            dataFinal = dateEnd;
+        }
+    }
+
+    // console.log(dateStart);
+    // console.log(dataFinal);
+
+    return Math.round(Math.abs((dateStart - dataFinal) / oneDay));
+}
 
 export function getProjects ( pArray : IIssues[] ){
    const projects : Array<IProject>= [];

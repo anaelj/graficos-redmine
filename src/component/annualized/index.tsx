@@ -1,5 +1,7 @@
+/* eslint-disable array-callback-return */
+
 import React,{useState, useEffect }  from 'react'
-import { arrayMonths, getTrackers, IIssues } from '../../tools/array.tools'
+import { arrayMonths, daysBetween, getTrackers, IIssues } from '../../tools/array.tools'
 import { Container } from './styles'
 import Chart from "react-google-charts";
 import Select from 'react-select';
@@ -16,6 +18,8 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
    const [loading, setLoading] = useState(false);
    const [selectedTracker, setSelectedTracker] = useState(0);
    const [trackerOptions, settrackerOptions] = useState([{label: 'Todos', value: 0}]);
+   const [totalGeral, setTotalGeral] = useState(0);
+   const [mediaDiaria, setMediaDiaria] = useState(0);
 
    useEffect (  () => {
 
@@ -32,19 +36,26 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
     arrayLocal = [];
     
     arrayMonths.map( item => {
-        return  arrayLocal.push(...[[
+        arrayLocal.push(...[[
                       item.label , 
                       issuesLocal.filter(issue => issue.created_on.includes(selectedYear+'-'+item.value)).length
-                    ]])
+                    ]]);
     })
+    setTotalGeral(arrayLocal.reduce( (acc, item)=>  acc + item[1], 0 ));
     settrackerOptions([...getTrackers(issues).map(item => { return ({ label : item.name, value : item.id})})]);
     setData([['Mês', 'Quantidade'], ...arrayLocal]);
     setLoading(false);
 
+    const dias = daysBetween(new Date(Number(selectedYear), 0 , 1), 
+                              new Date(Number(selectedYear), 11 , 1));
+    totalGeral > 0 && dias && setMediaDiaria(totalGeral / (dias-1));
         
-},[issues, selectedYear, selectedTracker, modulo]); 
-    
-  return (
+},[issues, selectedYear, selectedTracker, modulo, totalGeral, mediaDiaria]); 
+
+  if (!modulo) {
+    return (<></>)
+  } else {
+    return (
    <>
         {loading &&  <ReactLoading type="spokes" color='#000' height={250} width={250} />}
         <Container style={{height:'30px'}}>
@@ -74,7 +85,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
           loader={<div>Loading Chart</div>}
           data={ data }
           options={{
-            title: 'Chamados por módulo',
+            title: `Chamados por módulo: ${totalGeral}    média diária: ${mediaDiaria.toFixed(2)}`,
             legend: {position: 'top'},
             chartArea: { width: '65%' },
             hAxis: {
@@ -89,7 +100,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
         /> 
         </div> 
         </>
-    )
+    )}
 }
 
 export default Annualized;

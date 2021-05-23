@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+
 import React,{useState, useEffect }  from 'react'
 import { arrayMonths, IIssues } from '../../tools/array.tools'
 import { Container } from './styles'
@@ -45,7 +47,10 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
            
 },[issues, selectedYear, modulo]); 
     
-    
+if (!modulo) {
+  return (<></>)
+} else {
+   
    return (
    <>
         {loading &&  <ReactLoading type="spokes" color='#000' height={250} width={250} />}
@@ -85,6 +90,7 @@ const Annualized: React.FC<IModuloProps> = ({ children, issues, modulo, ...rest 
         </div> 
         </>
     )
+  }
 }
 
 export default Annualized;

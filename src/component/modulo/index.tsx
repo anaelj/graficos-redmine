@@ -1,5 +1,7 @@
+/* eslint-disable array-callback-return */
+
 import React,{useState, useEffect }  from 'react'
-import { getModules, getTrackers, IIssues } from '../../tools/array.tools'
+import { daysBetween, getModules, getTrackers, IIssues } from '../../tools/array.tools'
 import { Container } from './styles'
 import Chart from "react-google-charts";
 import Select from 'react-select';
@@ -17,6 +19,8 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
    const [loading, setLoading] = useState(false);
    const [selectedTracker, setSelectedTracker] = useState(0);
    const [trackerOptions, settrackerOptions] = useState([{label: 'Todos', value: 0}]);
+   const [totalGeral, setTotalGeral] = useState(0);
+   const [mediaDiaria, setMediaDiaria] = useState(0);
 
 
    useEffect (  () => {
@@ -34,23 +38,40 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
     arrayLocal = [];
     
     modules.map( item => {
-        return  arrayLocal.push(...[[
-                item.name === '' ? 'Sem módulo' : item.name , 
+        if (item.name !== '') {
+            arrayLocal.push(...[[
+                item.name , 
                 issuesLocal.filter(
                     issue => issue && issue.custom_fields && issue.custom_fields.find(
                       fd => fd.value === item.name)).length]])
+        }
     })
-    
+//    const teste = arrayLocal.reduce( (acc, item)=>  acc + item[1], 0 );
+    //console.log(teste);
+//    console.log(arrayLocal);
+    setTotalGeral(arrayLocal.reduce( (acc, item)=>  acc + item[1], 0 ));
+    //console.log(totalGeral);
     settrackerOptions([...getTrackers(issues).map(item => { return ({ label : item.name, value : item.id})})]);
     setData([['Módulo', 'Quantidade'], ...arrayLocal]);
     setLoading(false);
 
+    const dias = daysBetween(new Date(Number(selectedYear), selectedMonth === '00' ? 0 : Number(selectedMonth)-1 , 1), 
+              new Date(Number(selectedYear), selectedMonth === '00' ? 11 : Number(selectedMonth) , 1));
+    totalGeral > 0 && dias && setMediaDiaria(totalGeral / (dias-1));
+
+    // console.log(dias);
+    // console.log(mediaDiaria);
+
 //    console.log(issuesLocal);
            
-},[issues, selectedYear, selectedMonth, selectedTracker, projeto]); 
-    
+},[issues, selectedYear, selectedMonth, selectedTracker, projeto, totalGeral, mediaDiaria]); 
+  if (data.length === 1){
+    return (<></>) 
+  } else {
+    //console.log(data)
+  
     return (
-   <>
+         <>
         {loading &&  <ReactLoading type="spokes" color='#000' height={250} width={250} />}
         <Container style={{height: '30px'}}><h1>{projeto}</h1></Container>
         <Container>
@@ -89,6 +110,8 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
             </div>
         </Container>        
             <div style={{ display: 'flex', maxWidth: 900 }}>
+
+          
           <Chart
           width={'100%'}
           height={600}
@@ -96,7 +119,7 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
           loader={<div>Loading Chart</div>}
           data={ data }
           options={{
-            title: 'Chamados por módulo',
+            title: `Total de chamados por módulo: ${totalGeral}    média diária: ${mediaDiaria.toFixed(2)}`,
             chartArea: { width: '65%' },
             legend: {position: 'top'},
             hAxis: {
@@ -112,6 +135,7 @@ const Modulo: React.FC<IModuloProps> = ({ children, issues, projeto, ...rest }) 
         </div> 
         </>
     )
+  }
 }
 
 export default Modulo;
